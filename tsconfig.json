@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+//    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
+//    "isolatedModules": true,
     "jsx": "react-native",
     "lib": ["es6"],
     "moduleResolution": "node",
@@ -13,7 +13,8 @@
     "target": "esnext",
     "outDir": "./lib",
 //    "outFile": "./lib/index.js",
-    "rootDir": "src"
+    "rootDir": "src",
+    "declaration": true // 生成声明文件
   },
   "include": [
     "src/**/*"

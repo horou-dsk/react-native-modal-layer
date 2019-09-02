@@ -1,11 +1,11 @@
-import {TouchableWithoutFeedbackProps, View} from "react-native";
+import {TouchableWithoutFeedbackProps} from "react-native";
 import React, {Component} from "react";
 import ModalLayer from "./ModalLayer";
 import ModalLayerController, {ModalControllerOptions} from "./ModalLayerController";
 import _ from "lodash";
 import ModalLayers from "./ModalLayers";
 
-interface CreateModalOptions extends ModalControllerOptions {
+export interface CreateModalOptions extends ModalControllerOptions {
   shade?: boolean,
   shadePress?: TouchableWithoutFeedbackProps['onPress'],
   zIndex?: number
@@ -20,7 +20,7 @@ export default class ModalLayerFactory extends React.Component<{ ss: any }> {
   private static self: ModalLayers;
 
   public static create(elem: CreateModalOptions | React.ElementType): ModalLayerController {
-    if(this.self) {
+    if(!this.self) {
       console.error("ModalLayers not loaded")
       return null
     }

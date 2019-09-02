@@ -1,8 +1,17 @@
 {
   "name": "react-native-modal-layer",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "create react-native popup layer",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "keywords": [
+    "react-native",
+    "react-native-modal-layer",
+    "react",
+    "native",
+    "modal",
+    "layer"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/horou-dsk/react-native-modal-layer"
@@ -13,13 +22,15 @@
   "author": "HuangQuan <xly_tk@foxmail.com>",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.15",
-    "react": "*",
-    "react-native": ">=0.50.0"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.138",
     "@types/react": "~16.9.2",
     "@types/react-native": ">=0.50.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": ">=0.50.0"
   }
 }
