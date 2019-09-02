@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "description": "create react-native popup layer",
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/horou-dsk/react-native-modal-layer"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "HuangQuan <xly_tk@foxmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.15",
     "react": "*",
