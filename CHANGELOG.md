@@ -1,3 +1,5 @@
+- [1.0.2]
+  - 修复static引入配置CreateModalOptions声明必须声明component问题 
 - [1.0.1]
   - 修改ModalLayersRef 会加载失败问题
   - 修改弹层会被button遮挡问题

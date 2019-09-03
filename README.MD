@@ -1,7 +1,11 @@
 # ModalLayer
 
 ## Install
-`npm i react-native-modal-layer`
+```shell script
+npm i react-native-modal-layer 
+or
+yarn add react-native-modal-layer
+```
 
 ## ChangeLogs
 
@@ -114,7 +118,7 @@ class Page1 extends Component {
   }
 
   componentWillUnmount(): void {
-    // It is recommended to clear popovers here
+    // It is recommended to clear layer here
     ModalLayerFactory.delete(this.layer) // or ModalLayerFactory.delete([this.layer])
   }
 

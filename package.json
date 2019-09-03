@@ -18,7 +18,8 @@
     "url": "https://github.com/horou-dsk/react-native-modal-layer"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "tsc && npm publish"
   },
   "author": "HuangQuan <xly_tk@foxmail.com>",
   "license": "MIT",

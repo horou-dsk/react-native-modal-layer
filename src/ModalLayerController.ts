@@ -1,21 +1,21 @@
-import {Easing, EasingFunction, GestureResponderEvent, ViewStyle} from "react-native";
+import {Easing, EasingFunction, GestureResponderEvent, TouchableWithoutFeedbackProps, ViewStyle} from "react-native";
 import React, {ReactElement} from "react";
 import ModalLayer, {ModalLayerShowOptions} from "./ModalLayer";
 import ModalLayerAnimated from "./ModalLayerAnimated";
 
-interface ModalControllerSetOptions {
+export interface ModalControllerSetOptions {
   boxStyle?: ViewStyle,
   act?: ModalLayerShowOptions['act']
-  hideEasing?: EasingFunction,
-  showEasing?: EasingFunction,
-  showDuration?: number;
-  hideDuration?: number;
-  key?: string;
-  backHandle?: (event: GestureResponderEvent) => boolean;
+  hideEasing?: EasingFunction
+  showEasing?: EasingFunction
+  showDuration?: number
+  hideDuration?: number
+  key?: string
+  backHandle?: (event: GestureResponderEvent) => boolean
 }
 
 export interface ModalControllerOptions extends ModalControllerSetOptions {
-  component: React.ComponentClass<any> | React.ReactElement<any> | null | Function;
+  component: React.ComponentClass<any> | React.ReactElement<any> | null | Function
 }
 
 export default class ModalLayerController {

@@ -5,13 +5,15 @@ import ModalLayerController, {ModalControllerOptions} from "./ModalLayerControll
 import _ from "lodash";
 import ModalLayers from "./ModalLayers";
 
-export interface CreateModalOptions extends ModalControllerOptions {
-  shade?: boolean,
-  shadePress?: TouchableWithoutFeedbackProps['onPress'],
+export interface CreateOptions {
+  shade?: boolean
+  shadePress?: TouchableWithoutFeedbackProps['onPress']
   zIndex?: number
 }
 
-export default class ModalLayerFactory extends React.Component<{ ss: any }> {
+interface CreateModalOptions extends CreateOptions, ModalControllerOptions {}
+
+export default class ModalLayerFactory {
 
   private static index = 0;
 

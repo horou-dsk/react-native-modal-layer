@@ -1,7 +1,10 @@
 import ModalLayers from "./ModalLayers";
-import ModalLayerController from "./ModalLayerController";
-import ModalLayerFactory, { CreateModalOptions } from "./ModalLayerFactory";
+import ModalLayerController, {ModalControllerSetOptions} from "./ModalLayerController";
+import ModalLayerFactory, {CreateOptions} from "./ModalLayerFactory";
 import ModalLayerAnimated from "./ModalLayerAnimated";
+
+interface CreateModalOptions extends ModalControllerSetOptions, CreateOptions {}
+
 export {
   ModalLayerAnimated,
   ModalLayerController,
