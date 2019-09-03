@@ -1,6 +1,6 @@
 {
   "name": "react-native-modal-layer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "create react-native popup layer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,7 +10,8 @@
     "react",
     "native",
     "modal",
-    "layer"
+    "layer",
+    "popups"
   ],
   "repository": {
     "type": "git",

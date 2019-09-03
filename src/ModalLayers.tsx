@@ -12,7 +12,8 @@ export default class ModalLayers extends Component {
 
   modalLayers: React.ReactElement<any>[] = []
 
-  componentDidMount(): void {
+  constructor(props) {
+    super(props)
     ModalLayerFactory.setModalLayersRef(this)
   }
 
@@ -26,7 +27,8 @@ export default class ModalLayers extends Component {
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0
+          bottom: 0,
+          elevation: 99
         }}>
           {this.state.modalLayers}
         </View>
