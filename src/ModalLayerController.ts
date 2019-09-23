@@ -27,6 +27,22 @@ export default class ModalLayerController {
 
   }
 
+  private getComponent(...args) {
+    const component = this.options.component
+    let content = typeof component === 'function' ? ((component as ((...args) => React.ComponentClass<any>) | ((...args) => (React.ReactElement<any>)))(...args)) : component
+    const beforeRef = (content as any).ref;
+    content = React.cloneElement(content as ReactElement<any>, {
+      ref: ref => {
+        if(ref) {
+          if(ref.wrappedInstance) ref.wrappedInstance.layer = this; // modalLayerRef;
+          else ref.layer = this; // modalLayerRef;
+          if(beforeRef) beforeRef(ref);
+        }
+      }
+    })
+    return content
+  }
+
   show(...args) {
     const modalLayerRef = this.modalLayerRef;
     if (!modalLayerRef) return setTimeout(() => this.show(...args), 10);
@@ -38,23 +54,19 @@ export default class ModalLayerController {
     modalLayerRef.showEasing = showEasing;
     modalLayerRef.showDuration = showDuration;
     modalLayerRef.hideDuration = hideDuration;
-    let content = typeof component === 'function' ? ((component as ((...args) => React.ComponentClass<any>) | ((...args) => (React.ReactElement<any>)))(...args)) : component;
-    const beforeRef = (content as any).ref;
-    content = React.cloneElement(content as ReactElement<any>, {
-      ref: ref => {
-        if(ref) {
-          if(ref.wrappedInstance) ref.wrappedInstance.layer = this; // modalLayerRef;
-          else ref.layer = this; // modalLayerRef;
-          if(beforeRef) beforeRef(ref);
-        }
-      }
-    });
     modalLayerRef.show({
-      component: content,
+      component: this.getComponent(...args),
       boxStyle,
       act
     }).then(() => this.didShow());
     this.onShow();
+  }
+
+  public preload(...args) {
+    if(this.modalLayerRef)
+      this.modalLayerRef.preload(this.getComponent(...args), () => this.onLoad())
+    else
+      setTimeout(() => this.preload(...args), 10)
   }
 
   public setOptions(options: ModalControllerSetOptions) {
@@ -73,15 +85,13 @@ export default class ModalLayerController {
     }
   }
 
-  didHide() {
-  }
+  didHide: ((this: ModalLayerController) => void) | null = () => {}
 
-  didShow() {
-  }
+  didShow: ((this: ModalLayerController) => void) | null = () => {}
 
-  onShow() {
-  }
+  onShow: ((this: ModalLayerController) => void) | null = () => {}
 
-  onHide() {
-  }
+  onHide: ((this: ModalLayerController) => void) | null = () => {}
+
+  onLoad: ((this: ModalLayerController) => void) | null = () => {}
 }

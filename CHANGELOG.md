@@ -1,3 +1,7 @@
+- [1.0.4]
+  - 添加弹窗预加载功能preload, 解决某些情况弹窗第一次弹出很慢的问题
+- [1.0.3]
+  - 添加setElevation函数来更改弹窗容器的elevation值，以解决弹窗覆盖其他弹出式组件或被覆盖问题
 - [1.0.2]
   - 修复static引入配置CreateModalOptions声明必须声明component问题 
 - [1.0.1]

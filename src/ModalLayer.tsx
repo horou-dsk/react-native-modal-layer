@@ -128,6 +128,11 @@ export default class ModalLayer extends React.Component<ModalLayerProps> {
   )
   }
 
+  preload(component, callback?) {
+    this.contentComponent = component
+    this.setState({}, callback)
+  }
+
   show(options: ModalLayerShowOptions = {component: null, boxStyle: {}, act: ModalLayerAnimated.SCALE}) {
     this.contentComponent = options.component;
     this.boxStyle = options.boxStyle;

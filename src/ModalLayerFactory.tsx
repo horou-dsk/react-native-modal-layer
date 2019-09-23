@@ -111,4 +111,8 @@ export default class ModalLayerFactory {
     this.self = mlsRef
   }
 
+  public static setElevation(elevation: number) {
+    this.self.setElevation(elevation)
+  }
+
 }

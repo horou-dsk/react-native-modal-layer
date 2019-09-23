@@ -7,7 +7,8 @@ import _ from "lodash";
 export default class ModalLayers extends Component {
 
   state = {
-    modalLayers: []
+    modalLayers: [],
+    elevation: 99
   }
 
   modalLayers: React.ReactElement<any>[] = []
@@ -28,7 +29,7 @@ export default class ModalLayers extends Component {
           left: 0,
           right: 0,
           bottom: 0,
-          elevation: 99
+          elevation: this.state.elevation
         }}>
           {this.state.modalLayers}
         </View>
@@ -42,9 +43,7 @@ export default class ModalLayers extends Component {
       modalLayers: this.modalLayers.sort((a, b) => {
         return a.props.zIndex - b.props.zIndex;
       })
-    }/*, () => {
-      console.log(this.state.modalLayers);
-    }*/);
+    });
   };
 
   removeModalLayer = (key: string) => {
@@ -60,6 +59,10 @@ export default class ModalLayers extends Component {
       });
     }
   };
+
+  setElevation(elevation: number) {
+    this.setState({elevation})
+  }
 
   componentWillUnmount() {
     console.log('清除！！！')

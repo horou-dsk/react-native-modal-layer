@@ -1,7 +1,7 @@
 {
   "name": "react-native-modal-layer",
-  "version": "1.0.1",
-  "description": "create react-native popup layer",
+  "version": "1.0.4",
+  "description": "create react-native modal layer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "tsc && npm publish"
+    "pub": "tsc && npm publish"
   },
   "author": "HuangQuan <xly_tk@foxmail.com>",
   "license": "MIT",
