@@ -1,6 +1,6 @@
 {
   "name": "react-native-modal-layer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "create react-native modal layer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pub": "tsc && npm publish"
+    "pub": "npm publish"
   },
   "author": "HuangQuan <xly_tk@foxmail.com>",
   "license": "MIT",

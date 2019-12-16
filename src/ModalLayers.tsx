@@ -65,7 +65,7 @@ export default class ModalLayers extends Component {
   }
 
   componentWillUnmount() {
-    console.log('清除！！！')
+    // console.log('清除！！！')
     // 不能设置为空，应为app退出时有的组件执行析构函数时会删除layer，如果设置为空，会导致获取不到删除函数
     // ModalLayerFactory.setModalLayersRef(null)
   }

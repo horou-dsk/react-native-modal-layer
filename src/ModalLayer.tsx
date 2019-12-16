@@ -113,7 +113,7 @@ export default class ModalLayer extends React.Component<ModalLayerProps> {
     });
 
     return (
-      <View style={[styles.view, {left: state.isShow ? 0 : screenSize.width}]}>
+      <View style={[styles.view, {left: state.isShow ? 0 : 9999}]}>
     <View style={styles.container}>
     {shade ? <TouchableWithoutFeedback onPress={shadePress || (() => this.keyboardIsShow ? Keyboard.dismiss() : this.mlc.hide())}>
     <Animated.View style={[styles.fixedBg, {opacity: opacity}]}>
