@@ -1,6 +1,5 @@
 import {TouchableWithoutFeedbackProps} from "react-native";
 import React, {Component} from "react";
-import ModalLayer from "./ModalLayer";
 import ModalLayerController, {ModalControllerOptions} from "./ModalLayerController";
 import _ from "lodash";
 import ModalLayers from "./ModalLayers";
@@ -27,7 +26,7 @@ export default class ModalLayerFactory {
       return null
     }
     let options: CreateModalOptions;
-    if((elem as any).prototype instanceof Component) options = {
+    if((elem as any).prototype instanceof Component || elem instanceof Function) options = {
       component: (props) => React.createElement(elem as any, props),
       ...(elem as any).modalLayerOptions
     };
@@ -36,20 +35,7 @@ export default class ModalLayerFactory {
     const key = options.key || 'layer_' + (this.index++);
     const oldLayer = this.getLayer(key);
     if (oldLayer) return oldLayer;
-    const modalLayerController = new ModalLayerController(key, options);
-    const {zIndex = 0} = options;
-    const modalLayer = <ModalLayer
-      key={key}
-      zIndex={zIndex}
-      ref={modalLayerRef => {
-        if (modalLayerRef) {
-          modalLayerController.modalLayerRef = modalLayerRef;
-          modalLayerRef.mlc = modalLayerController;
-          modalLayerRef.mlf = this;
-        }
-      }}
-      shadePress={options.shadePress} shade={options.shade}/>;
-    this.self.addModalLayer(modalLayer);
+    const modalLayerController = new ModalLayerController(key, options, this.self);
     this.modalLayerControllers.add(modalLayerController);
     return modalLayerController;
   }

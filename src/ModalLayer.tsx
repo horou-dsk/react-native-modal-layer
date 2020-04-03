@@ -56,7 +56,7 @@ export default class ModalLayer extends React.Component<ModalLayerProps> {
 
   mlc: ModalLayerController;
 
-  mlf: typeof ModalLayerFactory;
+  __isMounted = true
 
   private _subscriptions = [];
 
@@ -81,7 +81,8 @@ export default class ModalLayer extends React.Component<ModalLayerProps> {
     this._subscriptions.forEach(subscription => {
       subscription.remove();
     });
-    this.mlf.delete(this.mlc);
+    ModalLayerFactory.delete(this.mlc)
+    this.__isMounted = false
   }
 
   toggle(isShow) {

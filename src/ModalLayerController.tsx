@@ -2,6 +2,7 @@ import {Easing, EasingFunction, GestureResponderEvent, TouchableWithoutFeedbackP
 import React, {ReactElement} from "react";
 import ModalLayer, {ModalLayerShowOptions} from "./ModalLayer";
 import ModalLayerAnimated from "./ModalLayerAnimated";
+import {CreateModalOptions, ModalLayers} from './index'
 
 export interface ModalControllerSetOptions {
   boxStyle?: ViewStyle,
@@ -23,14 +24,31 @@ export default class ModalLayerController {
   public modalLayerRef: ModalLayer;
 
   constructor(public key: string,
-              private options: ModalControllerOptions) {
+              private options: ModalControllerOptions,
+              private modalLayers: ModalLayers) {
+    this.createModalLayer(key, options)
+  }
 
+  private createModalLayer(key: string, options: CreateModalOptions) {
+    const {zIndex = 0} = options
+    const modalLayer = <ModalLayer
+      key={key}
+      zIndex={zIndex}
+      ref={modalLayerRef => {
+        if (modalLayerRef) {
+          this.modalLayerRef = modalLayerRef;
+          modalLayerRef.mlc = this;
+        }
+      }}
+      shadePress={options.shadePress} shade={options.shade}
+    />
+    this.modalLayers.addModalLayer(modalLayer)
   }
 
   private getComponent(...args) {
     const component = this.options.component
     let content = typeof component === 'function' ? ((component as ((...args) => React.ComponentClass<any>) | ((...args) => (React.ReactElement<any>)))(...args)) : component
-    const beforeRef = (content as any).ref;
+    /*const beforeRef = (content as any).ref;
     content = React.cloneElement(content as ReactElement<any>, {
       ref: ref => {
         if(ref) {
@@ -39,13 +57,14 @@ export default class ModalLayerController {
           if(beforeRef) beforeRef(ref);
         }
       }
-    })
+    })*/
     return content
   }
 
   show(...args) {
     const modalLayerRef = this.modalLayerRef;
-    if (!modalLayerRef) return setTimeout(() => this.show(...args), 10);
+    if (!modalLayerRef) return setTimeout(() => this.show(...args), 10)
+    if (!modalLayerRef.__isMounted) return this.createModalLayer(this.key, this.options)
     const {
       component, boxStyle, act = ModalLayerAnimated.SCALE, hideEasing, showEasing = Easing.elastic(1),
       showDuration = 400, hideDuration = 200
