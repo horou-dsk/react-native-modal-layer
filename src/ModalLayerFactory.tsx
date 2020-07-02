@@ -1,8 +1,7 @@
-import {TouchableWithoutFeedbackProps} from "react-native";
-import React, {Component} from "react";
-import ModalLayerController, {ModalControllerOptions} from "./ModalLayerController";
-import _ from "lodash";
-import ModalLayers from "./ModalLayers";
+import { TouchableWithoutFeedbackProps } from 'react-native'
+import React, { Component } from 'react'
+import ModalLayerController, { ModalControllerOptions } from './ModalLayerController'
+import ModalLayers from './ModalLayers'
 
 export interface CreateOptions {
   shade?: boolean
@@ -13,84 +12,81 @@ export interface CreateOptions {
 interface CreateModalOptions extends CreateOptions, ModalControllerOptions {}
 
 export default class ModalLayerFactory {
+  private static index = 0
 
-  private static index = 0;
+  private static modalLayerControllers = new Set<ModalLayerController>()
 
-  private static modalLayerControllers = new Set<ModalLayerController>();
-
-  private static self: ModalLayers;
+  private static self: ModalLayers
 
   public static create(elem: CreateModalOptions | React.ElementType): ModalLayerController {
-    if(!this.self) {
-      console.error("ModalLayers not loaded")
+    if (!this.self) {
+      console.error('ModalLayers not loaded')
       return null
     }
-    let options: CreateModalOptions;
-    if((elem as any).prototype instanceof Component || elem instanceof Function) options = {
-      component: (props) => React.createElement(elem as any, props),
-      ...(elem as any).modalLayerOptions
-    };
-    else
-      options = elem as CreateModalOptions;
-    const key = options.key || 'layer_' + (this.index++);
-    const oldLayer = this.getLayer(key);
-    if (oldLayer) return oldLayer;
-    const modalLayerController = new ModalLayerController(key, options, this.self);
-    this.modalLayerControllers.add(modalLayerController);
-    return modalLayerController;
+    let options: CreateModalOptions
+    if ((elem as any).prototype instanceof Component || elem instanceof Function)
+      options = {
+        component: props => React.createElement(elem as any, props),
+        ...(elem as any).modalLayerOptions,
+      }
+    else options = elem as CreateModalOptions
+    const key = options.key || 'layer_' + this.index++
+    // const oldLayer = this.getLayer(key);
+    // if (oldLayer) return oldLayer;
+    const modalLayerController = new ModalLayerController(key, options, () => this.self)
+    this.modalLayerControllers.add(modalLayerController)
+    return modalLayerController
   }
 
   public static getLayer(key: string): ModalLayerController {
-    let layer = null;
+    let layer = null
     this.modalLayerControllers.forEach(ml => {
       if (ml.key === key) {
-        layer = ml;
+        layer = ml
       }
-    });
-    return layer;
+    })
+    return layer
   }
 
   public static delete(mlc: ModalLayerController | ModalLayerController[]) {
-    const self = this.self;
+    const self = this.self
     if (mlc) {
-      if (_.isArray(mlc)) {
-        _(mlc).forEach((ad) => {
-          this.delete(ad)
-        });
-        return;
+      if (Array.isArray(mlc)) {
+        mlc.forEach(ad => this.delete(ad))
+        return
       }
-      this.modalLayerControllers.delete(mlc as ModalLayerController);
-      self.removeModalLayer((mlc as ModalLayerController).key);
+      this.modalLayerControllers.delete(mlc as ModalLayerController)
+      self.removeModalLayer((mlc as ModalLayerController).key)
     } else {
-      self.modalLayers = [];
+      self.modalLayers.clear()
       self.setState({
-        modalLayers: []
-      });
-      this.modalLayerControllers.clear();
+        modalLayers: [],
+      })
+      this.modalLayerControllers.clear()
     }
   }
 
   public static hideAll() {
     this.forEach(mlc => {
-      mlc.hide();
+      mlc.hide()
     })
   }
 
   public static forEach(func: (value: ModalLayerController) => void) {
-    this.modalLayerControllers.forEach(func);
+    this.modalLayerControllers.forEach(func)
   }
 
   public static back() {
-    let mdr;
+    let mdr
     this.forEach(mlc => {
       if (mlc.modalLayerRef.state.isShow) {
-        mdr = mlc;
+        mdr = mlc
       }
-    });
+    })
     if (mdr) {
-      mdr.backHandle();
-      return true;
-    } else return false;
+      mdr.backHandle()
+      return true
+    } else return false
   }
 
   public static setModalLayersRef(mlsRef: ModalLayers) {
@@ -100,5 +96,4 @@ export default class ModalLayerFactory {
   public static setElevation(elevation: number) {
     this.self.setElevation(elevation)
   }
-
 }

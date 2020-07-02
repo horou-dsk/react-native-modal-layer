@@ -1,6 +1,6 @@
 {
   "name": "react-native-modal-layer",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "create react-native modal layer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,13 +24,11 @@
   },
   "author": "HuangQuan <xly_tk@foxmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "lodash": "^4.17.15"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/lodash": "^4.14.138",
     "@types/react": "~16.9.2",
-    "@types/react-native": ">=0.50.0"
+    "@types/react-native": ">=0.50.0",
+    "prettier": "^2.0.5"
   },
   "peerDependencies": {
     "react": "*",
