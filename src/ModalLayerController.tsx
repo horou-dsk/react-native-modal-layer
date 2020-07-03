@@ -99,7 +99,7 @@ export default class ModalLayerController {
 
   public hide() {
     this.onHide()
-    this.modalLayerRef.hide().then(() => this.didHide())
+    if (this.modalLayerRef.__isMounted) this.modalLayerRef.hide().then(() => this.didHide())
   }
 
   public backHandle(e) {

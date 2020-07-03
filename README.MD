@@ -13,6 +13,8 @@ yarn add react-native-modal-layer
 
 ## Documentation
 
+[掘金专栏](https://juejin.im/post/5d8047665188250b055dd309)
+
 ### Quick Start
 
 #### Example 1.

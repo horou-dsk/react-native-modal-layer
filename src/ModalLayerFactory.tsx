@@ -31,8 +31,8 @@ export default class ModalLayerFactory {
       }
     else options = elem as CreateModalOptions
     const key = options.key || 'layer_' + this.index++
-    // const oldLayer = this.getLayer(key);
-    // if (oldLayer) return oldLayer;
+    const oldLayer = this.getLayer(key);
+    if (oldLayer) return oldLayer;
     const modalLayerController = new ModalLayerController(key, options, () => this.self)
     this.modalLayerControllers.add(modalLayerController)
     return modalLayerController
