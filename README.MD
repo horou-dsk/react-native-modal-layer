@@ -13,12 +13,12 @@ yarn add react-native-modal-layer
 
 ## Documentation
 
-[掘金专栏](https://juejin.im/post/5d8047665188250b055dd309)
+中文文档：[掘金专栏](https://juejin.im/post/5d8047665188250b055dd309)
 
 ### Quick Start
 
 #### Example 1.
-<img src="https://i.imgur.com/4NeDDrp.gif" />
+<img src="https://i.imgur.com/4NeDDrp.gif" alt="Example 1" />
 
 ```typescript jsx
 import React, {Component, Fragment} from 'react';
@@ -67,7 +67,7 @@ const App = () => {
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
-      <ModalLayers>
+      <ModalLayers> {/* tips: This component can only be written in App.js。Wrap your Router */}
         <Page1 />
       </ModalLayers>
     </Fragment>
@@ -147,7 +147,7 @@ const App = () => {
 export default App;
 ```
 
-<img src="https://i.imgur.com/qDY0qpX.gif" />
+<img src="https://i.imgur.com/qDY0qpX.gif" alt="Example 2" />
 
 *You can also write the configuration to the Layer class.*
 
