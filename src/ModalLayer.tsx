@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import {
   Animated,
   Dimensions,
+  Easing,
   EasingFunction,
   Keyboard,
   StyleSheet,
@@ -12,16 +13,29 @@ import {
   ViewStyle,
 } from 'react-native'
 import ModalLayerAnimated from './ModalLayerAnimated'
-import ModalLayerController from './ModalLayerController'
 
-interface ModalLayerProps {
+export type ModalLayerRef = {
+  preload: (component: React.ReactNode, callback?: () => void) => void
+  show: (options: ModalLayerShowOptions) => Promise<void>
+  hide: () => Promise<void>
+  showEasing: EasingFunction
+  hideEasing: EasingFunction | undefined
+  showDuration: number
+  hideDuration: number
+  emitHide: () => void
+  __isMounted: boolean
+  isShow: boolean
+}
+
+export interface ModalLayerProps {
   shadePress: TouchableWithoutFeedbackProps['onPress']
   shade?: boolean
   zIndex?: number
+  onRef: (ref: ModalLayerRef) => void
 }
 
 interface ReactComponent {
-  component: React.ComponentClass<any> | React.ReactElement<any> | null
+  component?: React.ReactNode
 }
 
 export interface ModalLayerShowOptions extends ReactComponent {
@@ -31,7 +45,7 @@ export interface ModalLayerShowOptions extends ReactComponent {
 
 const screenSize = Dimensions.get('window')
 
-export default class ModalLayer extends React.Component<ModalLayerProps> {
+/* export default class ModalLayer extends React.Component<ModalLayerProps> {
   state = {
     isShow: false,
     showAnimated: new Animated.Value(0),
@@ -161,7 +175,136 @@ export default class ModalLayer extends React.Component<ModalLayerProps> {
     //
     // });
   }
+} */
+
+function ModalLayer(props: ModalLayerProps) {
+  const [isShow, setIsShow] = useState(false)
+  const [didHide, setDidHide] = useState(true)
+  const [state, setState] = React.useState<{
+    showAnimated: Animated.Value
+    transform: TransformsStyle['transform']
+    boxStyle: ViewStyle | undefined
+    contentComponent: React.ReactNode
+  }>({
+    showAnimated: new Animated.Value(0),
+    transform: [],
+    boxStyle: {},
+    contentComponent: null,
+  })
+  const keyboardIsShowRef = React.useRef(false)
+  const callbackRef = React.useRef<{ fn: () => void; timeoutTimer: number }>()
+  const { shadePress, shade = true, onRef } = props
+  const opacity = state.showAnimated.interpolate({
+    inputRange: [0, 100],
+    outputRange: [0, 1],
+  })
+
+  const modalLayerRef = React.useRef<ModalLayerRef>({
+    preload: (component: React.ReactNode, callback?: () => void) => {
+      setState(state => ({
+        ...state,
+        contentComponent: component,
+      }))
+    },
+    show: (
+      options: ModalLayerShowOptions = {
+        component: null,
+        boxStyle: {},
+        act: ModalLayerAnimated.SCALE,
+      },
+    ) => {
+      setState(state => ({
+        ...state,
+        contentComponent: options.component,
+        boxStyle: options.boxStyle,
+        transform: options.act?.(state.showAnimated),
+      }))
+      return new Promise<void>((resolve, reject) => {
+        callbackRef.current = {
+          fn: resolve,
+          timeoutTimer: setTimeout(() => {
+            reject(new Error('ModalLayer show timeout'))
+          }, 2000),
+        }
+        setDidHide(false)
+        setIsShow(true)
+      })
+    },
+    hide: () => {
+      return new Promise<void>((resolve, reject) => {
+        callbackRef.current = {
+          fn: resolve,
+          timeoutTimer: setTimeout(() => {
+            reject(new Error('ModalLayer hide timeout'))
+          }, 2000),
+        }
+        setIsShow(false)
+      })
+    },
+    showEasing: Easing.linear,
+    hideEasing: Easing.linear,
+    showDuration: 300,
+    hideDuration: 300,
+    emitHide: () => {},
+    __isMounted: false,
+    isShow: false,
+  })
+
+  useEffect(() => {
+    modalLayerRef.current.isShow = isShow
+    if (callbackRef.current) {
+      const temp = callbackRef.current
+      callbackRef.current = undefined
+      Animated.timing(state.showAnimated, {
+        toValue: isShow ? 100 : 0,
+        easing: isShow ? modalLayerRef.current.showEasing : modalLayerRef.current.hideEasing,
+        useNativeDriver: true,
+        duration: isShow ? modalLayerRef.current.showDuration : modalLayerRef.current.hideDuration,
+      }).start(() => {
+        setDidHide(!isShow)
+        temp.fn()
+        clearTimeout(temp.timeoutTimer)
+      })
+    }
+  }, [isShow])
+
+  useEffect(() => {
+    modalLayerRef.current.__isMounted = true
+    const subscriptions = [
+      Keyboard.addListener('keyboardDidShow', () => {
+        keyboardIsShowRef.current = true
+      }),
+      Keyboard.addListener('keyboardDidHide', () => {
+        keyboardIsShowRef.current = false
+      }),
+    ]
+    onRef(modalLayerRef.current)
+    return () => {
+      subscriptions.forEach(sub => sub.remove())
+      modalLayerRef.current.__isMounted = false
+    }
+  }, [onRef, modalLayerRef])
+  return (
+    <View style={[styles.view, { left: isShow || !didHide ? 0 : 9999 }]}>
+      <View style={styles.container}>
+        {shade ? (
+          <TouchableWithoutFeedback
+            onPress={
+              shadePress || (() => (keyboardIsShowRef.current ? Keyboard.dismiss() : modalLayerRef.current.emitHide()))
+            }
+          >
+            <Animated.View style={[styles.fixedBg, { opacity: opacity }]} />
+          </TouchableWithoutFeedback>
+        ) : null}
+        <Animated.View style={[styles.box, state.boxStyle, { transform: state.transform, opacity: opacity }]}>
+          {state.contentComponent}
+        </Animated.View>
+      </View>
+    </View>
+  )
 }
+
+export default ModalLayer
 
 const styles = StyleSheet.create({
   container: {

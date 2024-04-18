@@ -3,7 +3,7 @@ import { Animated, Dimensions } from 'react-native'
 const screenSize = Dimensions.get('window')
 
 export default class ModalLayerAnimated {
-  static SCALE = ani => [
+  static SCALE = (ani: Animated.Value) => [
     {
       scale: ani.interpolate({
         inputRange: [0, 100],
@@ -12,7 +12,7 @@ export default class ModalLayerAnimated {
     },
   ]
 
-  static TRANSLATE_Y = ani => [
+  static TRANSLATE_Y = (ani: Animated.Value) => [
     {
       translateY: ani.interpolate({
         inputRange: [0, 100],
@@ -21,7 +21,7 @@ export default class ModalLayerAnimated {
     },
   ]
 
-  static TRANSLATE_Y_B = ani => [
+  static TRANSLATE_Y_B = (ani: Animated.Value) => [
     {
       translateY: ani.interpolate({
         inputRange: [0, 100],
@@ -30,7 +30,7 @@ export default class ModalLayerAnimated {
     },
   ]
 
-  static TRANSLATE_X = ani => [
+  static TRANSLATE_X = (ani: Animated.Value) => [
     {
       translateX: ani.interpolate({
         inputRange: [0, 100],
@@ -39,7 +39,7 @@ export default class ModalLayerAnimated {
     },
   ]
 
-  static TRANSLATE_X_B = ani => [
+  static TRANSLATE_X_B = (ani: Animated.Value) => [
     {
       translateX: ani.interpolate({
         inputRange: [0, 100],

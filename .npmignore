@@ -4,3 +4,4 @@
 **/.gitignore
 **/.idea
 .prettierrc.js
+pnpm-lock.yaml

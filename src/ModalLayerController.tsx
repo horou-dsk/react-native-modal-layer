@@ -1,8 +1,9 @@
-import {Easing, EasingFunction, GestureResponderEvent, ViewStyle} from 'react-native'
+import { Easing, EasingFunction, GestureResponderEvent, ViewStyle } from 'react-native'
 import React from 'react'
-import ModalLayer, {ModalLayerShowOptions} from './ModalLayer'
+import ModalLayer, { ModalLayerRef, ModalLayerShowOptions } from './ModalLayer'
 import ModalLayerAnimated from './ModalLayerAnimated'
-import {CreateModalOptions, ModalLayers} from './index'
+import { CreateModalOptions } from './index'
+import { ModalLayersRef } from './types'
 
 export interface ModalControllerSetOptions {
   boxStyle?: ViewStyle
@@ -12,17 +13,21 @@ export interface ModalControllerSetOptions {
   showDuration?: number
   hideDuration?: number
   key?: string
-  backHandle?: (event: GestureResponderEvent) => boolean
+  backHandle?: (event?: GestureResponderEvent) => boolean
 }
 
 export interface ModalControllerOptions extends ModalControllerSetOptions {
-  component: React.ComponentClass<any> | React.ReactElement | null | Function
+  component: React.FC<unknown> | React.ReactElement | null | Function
 }
 
 export default class ModalLayerController {
-  public modalLayerRef: ModalLayer
+  public modalLayerRef: ModalLayerRef | undefined
 
-  constructor(public key: string, private options: ModalControllerOptions, private getModalLayers: () => ModalLayers) {
+  constructor(
+    public key: string,
+    private options: ModalControllerOptions,
+    private getModalLayers: () => ModalLayersRef,
+  ) {
     this.createModalLayer(key, options)
   }
 
@@ -32,10 +37,12 @@ export default class ModalLayerController {
       <ModalLayer
         key={key}
         zIndex={zIndex}
-        ref={modalLayerRef => {
+        onRef={modalLayerRef => {
           if (modalLayerRef) {
             this.modalLayerRef = modalLayerRef
-            modalLayerRef.mlc = this
+            modalLayerRef.emitHide = () => {
+              this.hide()
+            }
           }
         }}
         shadePress={options.shadePress}
@@ -45,31 +52,29 @@ export default class ModalLayerController {
     this.getModalLayers().addModalLayer(modalLayer, callback)
   }
 
-  private getComponent(...args) {
+  private getComponent(...args: any[]) {
     const component = this.options.component
     /*const beforeRef = (content as any).ref;
-    content = React.cloneElement(content as ReactElement<any>, {
-      ref: ref => {
-        if(ref) {
-          if(ref.wrappedInstance) ref.wrappedInstance.layer = this; // modalLayerRef;
-          else ref.layer = this; // modalLayerRef;
-          if(beforeRef) beforeRef(ref);
-        }
+  content = React.cloneElement(content as ReactElement<any>, {
+    ref: ref => {
+      if(ref) {
+        if(ref.wrappedInstance) ref.wrappedInstance.layer = this; // modalLayerRef;
+        else ref.layer = this; // modalLayerRef;
+        if(beforeRef) beforeRef(ref);
       }
-    })*/
-    return typeof component === 'function'
-      ? (component as ((...args) => React.ComponentClass<any>) | ((...args) => React.ReactElement))(...args)
-      : component
+    }
+  })*/
+    return typeof component === 'function' ? component(args[0], args[1]) : component
   }
 
-  show(...args) {
+  show(...args: any[]): any {
     const modalLayerRef = this.modalLayerRef
     if (!modalLayerRef) return setTimeout(() => this.show(...args), 10)
     if (!modalLayerRef.__isMounted) return this.createModalLayer(this.key, this.options, () => this.show(...args))
     const {
       boxStyle,
       act = ModalLayerAnimated.SCALE,
-      hideEasing,
+      hideEasing = Easing.linear,
       showEasing = Easing.elastic(1),
       showDuration = 400,
       hideDuration = 200,
@@ -84,12 +89,12 @@ export default class ModalLayerController {
         boxStyle,
         act,
       })
-      .then(() => this.didShow())
-    this.onShow()
+      .then(() => this.didShow?.())
+    this.onShow?.()
   }
 
-  public preload(...args) {
-    if (this.modalLayerRef) this.modalLayerRef.preload(this.getComponent(...args), () => this.onLoad())
+  public preload(...args: any[]) {
+    if (this.modalLayerRef) this.modalLayerRef.preload(this.getComponent(...args), () => this.onLoad?.())
     else setTimeout(() => this.preload(...args), 10)
   }
 
@@ -98,11 +103,11 @@ export default class ModalLayerController {
   }
 
   public hide() {
-    this.onHide()
-    if (this.modalLayerRef.__isMounted) this.modalLayerRef.hide().then(() => this.didHide())
+    this.onHide?.()
+    if (this.modalLayerRef?.__isMounted) this.modalLayerRef.hide().then(() => this.didHide?.())
   }
 
-  public backHandle(e) {
+  public backHandle(e?: GestureResponderEvent) {
     const { backHandle } = this.options
     if (!(backHandle && backHandle(e))) {
       this.hide()

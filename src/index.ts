@@ -5,4 +5,5 @@ import ModalLayerAnimated from './ModalLayerAnimated'
 
 interface CreateModalOptions extends ModalControllerSetOptions, CreateOptions {}
 
-export { ModalLayerAnimated, ModalLayerController, ModalLayerFactory, ModalLayers, CreateModalOptions }
+export { ModalLayerAnimated, ModalLayerController, ModalLayerFactory, ModalLayers }
+export type { CreateModalOptions }

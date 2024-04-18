@@ -1,6 +1,6 @@
 {
   "name": "react-native-modal-layer",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "create react-native modal layer， react-native好用的弹层组件",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -20,18 +20,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pub": "npm publish",
-    "build": "tsc && Get-ChildItem lib | Where{$_.Name -Match \"^((?!index\\.).*)+d\\.ts$\"} | Remove-Item"
+    "build": "tsc"
   },
   "author": "HuangQuan <xly_tk@foxmail.com>",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "@types/react": "~16.9.2",
-    "@types/react-native": ">=0.50.0",
-    "prettier": "^2.0.5"
+    "@react-native/typescript-config": "0.75.0-main",
+    "@types/react": "^18.2.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": ">=0.50.0"
-  }
+    "react-native": ">=0.70.0"
+  },
+  "files": [
+    "lib",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ]
 }

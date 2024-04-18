@@ -1,7 +1,7 @@
 import { TouchableWithoutFeedbackProps } from 'react-native'
 import React, { Component } from 'react'
 import ModalLayerController, { ModalControllerOptions } from './ModalLayerController'
-import ModalLayers from './ModalLayers'
+import { ModalLayersRef } from './types'
 
 export interface CreateOptions {
   shade?: boolean
@@ -16,9 +16,9 @@ export default class ModalLayerFactory {
 
   private static modalLayerControllers = new Set<ModalLayerController>()
 
-  private static self: ModalLayers
+  private static self: ModalLayersRef
 
-  public static create(elem: CreateModalOptions | React.ElementType): ModalLayerController {
+  public static create(elem: CreateModalOptions | React.ElementType): ModalLayerController | null {
     if (!this.self) {
       console.error('ModalLayers not loaded')
       return null
@@ -26,19 +26,19 @@ export default class ModalLayerFactory {
     let options: CreateModalOptions
     if ((elem as any).prototype instanceof Component || elem instanceof Function)
       options = {
-        component: props => React.createElement(elem as any, props),
+        component: props => React.createElement(elem as any, props as any),
         ...(elem as any).modalLayerOptions,
       }
     else options = elem as CreateModalOptions
     const key = options.key || 'layer_' + this.index++
-    const oldLayer = this.getLayer(key);
-    if (oldLayer) return oldLayer;
+    const oldLayer = this.getLayer(key)
+    if (oldLayer) return oldLayer
     const modalLayerController = new ModalLayerController(key, options, () => this.self)
     this.modalLayerControllers.add(modalLayerController)
     return modalLayerController
   }
 
-  public static getLayer(key: string): ModalLayerController {
+  public static getLayer(key: string): ModalLayerController | null {
     let layer = null
     this.modalLayerControllers.forEach(ml => {
       if (ml.key === key) {
@@ -58,10 +58,7 @@ export default class ModalLayerFactory {
       this.modalLayerControllers.delete(mlc as ModalLayerController)
       self.removeModalLayer((mlc as ModalLayerController).key)
     } else {
-      self.modalLayers.clear()
-      self.setState({
-        modalLayers: [],
-      })
+      self.clear()
       this.modalLayerControllers.clear()
     }
   }
@@ -77,9 +74,9 @@ export default class ModalLayerFactory {
   }
 
   public static back() {
-    let mdr
+    let mdr: ModalLayerController | undefined
     this.forEach(mlc => {
-      if (mlc.modalLayerRef.state.isShow) {
+      if (mlc.modalLayerRef?.isShow) {
         mdr = mlc
       }
     })
@@ -89,7 +86,7 @@ export default class ModalLayerFactory {
     } else return false
   }
 
-  public static setModalLayersRef(mlsRef: ModalLayers) {
+  public static setModalLayersRef(mlsRef: ModalLayersRef) {
     this.self = mlsRef
   }
 
